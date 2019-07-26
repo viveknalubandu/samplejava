@@ -1,14 +1,14 @@
 pipeline {
    agent any
+   tools {
+      maven 'M3'
+   }
    stages {
        stage("build") {
            steps {
                snDevOpsStep '099ac72a1336bf408b49b2776144b0d0'
                echo "Building" 
-              def mvn_version = 'M3'
-              withEnv( ["PATH+MAVEN=${tool mvn_version}/bin"] ) {
                 sh 'mvn clean install -DskipTests'
-              } 
                sleep 5
            }
        }
