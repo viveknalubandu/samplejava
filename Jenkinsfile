@@ -5,6 +5,7 @@ pipeline {
            steps {
                snDevOpsStep '099ac72a1336bf408b49b2776144b0d0'
                echo "Building"
+               mvn clean install -DskipTests
                sleep 5
            }
        }
@@ -12,6 +13,7 @@ pipeline {
            steps {
                snDevOpsStep '819ac72a1336bf408b49b2776144b0d0'
                echo "Testing"
+               mvn test -Dpublish
                sleep 3
            }
        }
@@ -20,6 +22,7 @@ pipeline {
                snDevOpsStep '899ac72a1336bf408b49b2776144b0d0'
                snDevOpsChange()
                echo "Deploying"
+               // release process
                sleep 7
            }
        }
