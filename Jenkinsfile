@@ -4,8 +4,8 @@ pipeline {
        stage("build") {
            steps {
                snDevOpsStep '099ac72a1336bf408b49b2776144b0d0'
-               echo "Building"
-               mvn clean install -DskipTests
+               echo "Building"               
+               sh 'mvn clean install -DskipTests'
                sleep 5
            }
        }
@@ -13,7 +13,7 @@ pipeline {
            steps {
                snDevOpsStep '819ac72a1336bf408b49b2776144b0d0'
                echo "Testing"
-               mvn test -Dpublish
+               sh 'mvn test -Dpublish'
                sleep 3
            }
        }
