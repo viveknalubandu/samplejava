@@ -34,11 +34,7 @@ pipeline {
                // release process
                sleep 7
            }
-           post {
-                always {
-                    junit '**/target/surefire-reports/*.xml' 
-                }
-            }
+       
        }
    }
 }
