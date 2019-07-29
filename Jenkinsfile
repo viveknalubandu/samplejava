@@ -8,9 +8,14 @@ pipeline {
            steps {
               snDevOpsStep '6750e0cc138f770002a9b2776144b046'
                echo "Building" 
-                sh 'mvn clean install -DskipTests'
+                sh 'mvn clean install'
                sleep 5
            }
+           post {
+                always {
+                    junit '**/target/surefire-reports/*.xml' 
+                }
+            }
           
        }
        stage("test") {
