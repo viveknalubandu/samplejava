@@ -13,6 +13,36 @@ pipeline {
            }
           
        }
+      
+      stage("UAT deploy") {
+            steps {
+                snDevOpsStep '3d17255513877b0002a9b2776144b09c'
+                sh '''
+                    export M2_HOME=/opt/apache-maven-3.6.0 # your Mavan home path
+                    export PATH=$PATH:$M2_HOME/bin
+                    mvn --version
+                '''
+                sh 'mvn package'
+
+                script {
+                    sshPublisher(continueOnError: false, failOnError: true,
+                    publishers: [
+                        sshPublisherDesc(
+                            configName:'CorpSite UAT',
+                            verbose: true,
+                            transfers: [
+                                sshTransfer(
+                                    sourceFiles: 'target/globex-web.war',
+                                    removePrefix: 'target/',
+                                    remoteDirectory: '/opt/tomcat/webapps'
+                                )
+                            ]
+                        )
+                    ])
+                }
+            }
+        }
+      
        stage("test") {
            steps {
                snDevOpsStep 'df1cd11d13477b0002a9b2776144b0e2'
