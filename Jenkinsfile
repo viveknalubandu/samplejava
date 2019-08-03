@@ -1,76 +1,93 @@
 pipeline {
-    agent any
-      tools {
-         maven 'Maven'
-      }
+   agent any
+   tools {
+      maven 'Maven'
+   }
+   stages {
 
-    stages {
-        stage('Build') {
-           snDevOpsStep 'c4ac395513c77b0002a9b2776144b0cc'
-            steps {
-                echo 'Building'
- 			sh 'mvn clean install'
+       stage("build") {
+
+           steps {
+
+              snDevOpsStep 'db1cd11d13477b0002a9b2776144b0e2'
+
+               echo "Building" 
+
+                sh 'mvn clean install'
+
                sleep 5
-            }
-         post {
-                   always {
 
-                       junit '**/target/surefire-reports/*.xml' 
+           }         
 
-                   }
-               }
-        }
-        stage('Deploy to Dev') {
-            // when {
-            //     branch 'develop' 
-            // }
-           snDevOpsStep '48ac395513c77b0002a9b2776144b0cc'
-            stages {
-                stage('Building Distributable Package') {
-                    steps {
-                        echo 'Building'
-                    }
-                }
-                stage('Archiving Package') {
-                    steps {
-                        echo 'Archiving Aritfacts'
-                        archiveArtifacts artifacts: '/*.zip', fingerprint: true
-                    }
-                }
-                stage('Deploying Dev') {
-                    steps {
-                        echo 'Deploying'
-                        timeout(time:3, unit:'DAYS') {
-                            input message: "Approve build?"
-                        }
-                    }
-                }
-            }
+       }
 
-        }
-        stage('Deploy to Test') {
-           snDevOpsStep 'ff9c395513c77b0002a9b2776144b0cb'
-            when {
-                branch 'develop' 
-            }
+     
+      stage("UAT deploy") {
+
             steps {
-                echo 'deploying..'
-                timeout(time:3, unit:'DAYS') {
-                    input message: "Approve build?"
+
+                snDevOpsStep '3d17255513877b0002a9b2776144b09c'
+
+                sh '''
+
+                    export M2_HOME=/opt/apache-maven-3.6.0 # your Mavan home path
+
+                    export PATH=$PATH:$M2_HOME/bin
+
+                    mvn --version
+
+                '''
+
+                sh 'mvn package'
+
+            }
+
+        }      
+
+       stage("test") {
+
+           steps {
+
+               snDevOpsStep 'df1cd11d13477b0002a9b2776144b0e2'
+
+               echo "Testing"
+
+               sh 'mvn test -Dpublish'
+
+               sleep 3
+
+           }
+
+          post {
+
+                always {
+
+                    junit '**/target/surefire-reports/*.xml' 
+
                 }
+
             }
-        }
-        stage('Deploy to Prod') {
-           snDevOpsStep '44ac395513c77b0002a9b2776144b0cc'
-            when {
-                branch 'release' 
-            }
-            steps {
-                timeout(time:3, unit:'DAYS') {
-                    input message: "Deploy to Prod?"
-                }
-                echo 'Deploying....'
-            }
-        }
-    }
+
+       }
+
+       stage("deploy") {
+
+           steps {
+
+               snDevOpsStep '5f1cd11d13477b0002a9b2776144b0e2'
+
+               snDevOpsChange()
+
+               echo "Deploying"
+
+               // release process
+
+               sleep 7
+
+           }     
+
+       }
+
+   }
+
 }
