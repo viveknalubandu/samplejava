@@ -35,7 +35,6 @@ pipeline {
                snDevOpsChange()
                echo "Deploying"
               // release process
-
               sleep 7
            }     
        }
