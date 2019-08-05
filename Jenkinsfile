@@ -1,44 +1,76 @@
 pipeline {
-   agent any
-   tools {
-      maven 'Maven'
-   }
-   stages {
-       stage("build") {
-          steps {
-             snDevOpsStep 'db1cd11d13477b0002a9b2776144b0e2'
-               echo "Building" 
-                sh 'mvn clean install'
+    agent any
+      tools {
+         maven 'Maven'
+      }
+    stages {
+        stage('Build') {
+           
+            steps {
+                echo 'Building'
+                snDevOpsStep 'c4ac395513c77b0002a9b2776144b0cc'
+             sh 'mvn clean install'
                sleep 5
-           }         
-       }     
+            }
+         post {
+                   always {
 
-       stage("test") {
-           steps {
-               snDevOpsStep 'df1cd11d13477b0002a9b2776144b0e2'
-               echo "Testing"
-               sh 'mvn test -Dpublish'
-               sleep 3
-           }
+                       junit '**/target/surefire-reports/*.xml' 
 
-          post {
-                always {
-                    junit '**/target/surefire-reports/*.xml' 
+                   }
+               }
+        }
+        stage('Deploy to Dev') {
+            // when {
+            //     branch 'develop' 
+            // }          
+            stages {
+                stage('Building Distributable Package') {
+                    steps {
+                        echo 'Building'
+                        snDevOpsStep '48ac395513c77b0002a9b2776144b0cc'
+                    }
+                }
+                stage('Archiving Package') {
+                    steps {
+                        echo 'Archiving Aritfacts'
+                        archiveArtifacts artifacts: '/*.zip', fingerprint: true
+                    }
+                }
+                stage('Deploying Dev') {
+                    steps {
+                        echo 'Deploying'
+                        timeout(time:3, unit:'DAYS') {
+                            input message: "Approve build?"
+                        }
+                    }
                 }
             }
 
-       }
-
-       stage("deploy") {
-           steps {
-               snDevOpsStep '5f1cd11d13477b0002a9b2776144b0e2'
-               snDevOpsChange()
-               echo "Deploying"
-              // release process
-              sleep 7
-           }     
-       }
-
-   }
-
+        }
+        stage('Deploy to Test') {          
+            when {
+                branch 'develop' 
+            }
+            steps {
+                echo 'deploying..'
+                snDevOpsStep 'ff9c395513c77b0002a9b2776144b0cb'
+                timeout(time:3, unit:'DAYS') {
+                    input message: "Approve build?"
+                }
+            }
+        }
+        stage('Deploy to Prod') {          
+            when {
+                branch 'release' 
+            }
+            steps {
+                snDevOpsStep '44ac395513c77b0002a9b2776144b0cc'
+                timeout(time:3, unit:'DAYS') {
+                    input message: "Deploy to Prod?"
+                }
+                echo 'Deploying....'
+            }
+        }
+    }
 }
