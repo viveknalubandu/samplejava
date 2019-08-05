@@ -43,7 +43,6 @@ pipeline {
                         snDevOpsStep '48ac395513c77b0002a9b2776144b0cc'
                         echo 'Deploying'
                        
-                        }
                     }
                 }
             }
