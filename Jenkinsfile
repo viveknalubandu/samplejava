@@ -5,17 +5,12 @@ pipeline {
    }
    stages {
        stage("build") {
-           stages {
-               stage("build-1") { 
-                   steps {
-                      snDevOpsStep 'b21a8b2a1336bf408b49b2776144b0ea'
-                       echo "Building" 
-                        sh 'mvn clean install -DskipTests'
-                       sleep 5
-                   }
-               }
+           steps {
+              snDevOpsStep 'b21a8b2a1336bf408b49b2776144b0ea'
+               echo "Building" 
+                sh 'mvn clean install -DskipTests'
+               sleep 5
            }
-       }
        }
        stage("test") {
            steps {
