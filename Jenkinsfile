@@ -1,65 +1,44 @@
 pipeline {
-    agent any
-      tools {
-         maven 'Maven'
-      }
-    stages {
-        stage('Build') {
-           
-            steps {
-                echo 'Building'
-                snDevOpsStep 'c4ac395513c77b0002a9b2776144b0cc'
-             sh 'mvn clean install'
-               sleep 5
-            }
-         post {
-                   always {
-
-                       junit '**/target/surefire-reports/*.xml' 
-
+   agent any
+   tools {
+      maven 'Maven'
+   }
+   stages {
+       stage("build") {
+           stages {
+               stage("build-1") { 
+                   steps {
+                      snDevOpsStep 'b21a8b2a1336bf408b49b2776144b0ea'
+                       echo "Building" 
+                        sh 'mvn clean install -DskipTests'
+                       sleep 5
                    }
                }
-        }
-        stage('Deploy to Dev') {
-            // when {
-            //     branch 'develop' 
-            // }          
-            stages {
-                stage('Building Distributable Package') {
-                    steps {
-                        echo 'Building'
-                        snDevOpsStep '48ac395513c77b0002a9b2776144b0cc'
-                    }
-                }
-                stage('Archiving Package') {
-                    steps {
-                        snDevOpsStep '48ac395513c77b0002a9b2776144b0cc'
-                        echo 'Archiving Aritfacts'
-                  
-                    }
-                }
-                stage('Deploying Dev') {
-                    steps {
-                        snDevOpsStep '48ac395513c77b0002a9b2776144b0cc'
-                        echo 'Deploying'
-                       
-                    }
-                }
-            }
+           }
+       }
+       }
+       stage("test") {
+           steps {
+               snDevOpsStep '632a87ee13f2bf408b49b2776144b0a6'
+               echo "Testing"
+               sh 'mvn test -Dpublish'
+               sleep 3
+           }
 
-        }
-        stage('Deploy to Test') {          
-            steps {
-                echo 'deploying..'
-                snDevOpsStep 'ff9c395513c77b0002a9b2776144b0cb'
-                
+           post {
+                always {
+                    junit '**/target/surefire-reports/*.xml' 
+                }
             }
-        }
-        stage('Deploy to Prod') {          
-            steps {
-                snDevOpsStep '44ac395513c77b0002a9b2776144b0cc'
-                echo 'Deploying....'
-            }
-        }
-    }
+       }
+       stage("deploy") {
+           steps {
+               snDevOpsStep 'ba3a0f2a1336bf408b49b2776144b0ad'
+               snDevOpsChange()
+               echo "Deploying"
+               // release process
+               sleep 7
+           }
+       }
+   }
 }
