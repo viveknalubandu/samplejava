@@ -5,12 +5,8 @@ pipeline {
    }
    stages {
        stage("build") {
-          steps {
-                    snDevOpsStep 'ac1715080f6333009d1a986eb4767ee6'
-                     echo "Building" 
-                 }
           stages {
-             stage("build") {
+             stage("build1") {
                  steps {
                    // snDevOpsStep 'ac1715080f6333009d1a986eb4767ee6'
                      echo "Building" 
