@@ -29,7 +29,7 @@ pipeline {
        stage("deploy") {
            steps {
                snDevOpsStep 'faf24192db23ff00bffe5223dc961959'
-               snDevOpsChange(enabled:false)
+               snDevOpsChange()
                echo "Deploying"
                // release process
                sleep 7
