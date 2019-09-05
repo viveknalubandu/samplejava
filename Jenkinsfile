@@ -15,7 +15,6 @@ pipeline {
        stage("test") {
            steps {
                snDevOpsStep 'f2f24192db23ff00bffe5223dc96195a'
-               snDevOpsChange()
                echo "Testing"
                sh 'mvn test -Dpublish'
                sleep 3
