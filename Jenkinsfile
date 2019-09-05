@@ -15,6 +15,7 @@ pipeline {
        stage("test") {
            steps {
                snDevOpsStep 'f2f24192db23ff00bffe5223dc96195a'
+               snDevOpsChange()
                echo "Testing"
                sh 'mvn test -Dpublish'
                sleep 3
@@ -29,7 +30,7 @@ pipeline {
        stage("deploy") {
            steps {
                snDevOpsStep 'faf24192db23ff00bffe5223dc961959'
-               snDevOpsChange()
+               //snDevOpsChange()
                echo "Deploying"
                // release process
                sleep 7
