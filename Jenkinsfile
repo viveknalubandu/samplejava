@@ -7,25 +7,12 @@ pipeline {
        stage("build") {
                 steps {
                     snDevOpsStep ()
-                     echo "Building" 
-                      sh 'mvn -X clean install -DskipTests'
-                     sleep 5
+                    echo "Building" 
+                    sh 'mvn -X clean install -DskipTests'
+                    sleep 5
                 }
        }
-       stage("test") {
-           steps {
-               snDevOpsStep ()
-               echo "Testing"
-               sh 'mvn test -Dpublish'
-               sleep 3
-           }
-
-           post {
-                always {
-                    junit '**/target/surefire-reports/*.xml' 
-                }
-            }
-       }
+  
        stage("deploy") {
            steps {
                snDevOpsStep ()
@@ -36,5 +23,5 @@ pipeline {
                sleep 7
            }
        }
-   }
+  }
 }
