@@ -27,27 +27,12 @@ pipeline {
         }
   
       stage("deploy") {
-         stages{
-             stage('deploy UAT') {
-                when{
-                   branch 'dev'
-                }
-               steps{
-                 snDevOpsStep ()
-                 echo "deploy in UAT"
-               }
-             }
-            stage('deploy PROD') {
-               when {
-                  branch 'master'
-               }
-                steps{
+             steps{
                   snDevOpsStep ()
-                   echo "deploy in prod"
+                  echo "deploy in prod"
                   snDevOpsChange()              
-                }
-            }
-        }
-      }
+              }
+      }      
+      
   }
 }
