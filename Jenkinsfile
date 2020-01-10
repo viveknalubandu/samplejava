@@ -30,6 +30,7 @@ pipeline {
              steps{
                   snDevOpsStep ()
                   echo "deploy in prod"
+                  echo "deploy in prod"
                   snDevOpsChange()              
               }
       }      
