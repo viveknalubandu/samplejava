@@ -1,3 +1,6 @@
+def semanticVersion = "${env.BUILD_NUMBER}.0.0"
+def packageName = "sample_devops-package_${env.BUILD_NUMBER}"
+def version = "${env.BUILD_NUMBER}.0"
 pipeline {
    agent any
    tools {
@@ -9,6 +12,7 @@ pipeline {
                     snDevOpsStep ()
                     echo "Building" 
                     sh 'mvn -X clean install -DskipTests'
+        snDevOpsArtifact(artifactsPayload:"""{"artifacts": [{"name": "sample-devops-webapp.jar","version": "${version}","semanticVersion": "${semanticVersion}","repositoryName": "sample-devops-webapp"}],"stageName": "build"}""")
                     sleep 5
                 }
        }
@@ -29,6 +33,8 @@ pipeline {
       stage("deploy") {
              steps{
                   snDevOpsStep ()
+                snDevOpsPackage(name: "sample-devops-webapp_${version}", artifactsPayload: """{"artifacts": [{"name": "sample-devops-webapp.jar","version": "${version}","semanticVersion": "${semanticVersion}","repositoryName": "sample-devops-webapp"}]}""")
+
                   echo "deploy in prod"
                   echo "deploy in prod"
                   snDevOpsChange()              
