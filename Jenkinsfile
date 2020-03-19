@@ -12,7 +12,6 @@ pipeline {
                     snDevOpsStep ()
                     echo "Building" 
                     sh 'mvn -X clean install -DskipTests'
-                    snDevOpsArtifact(artifactsPayload:"""{"artifacts": [{"name": "sample-devops-webapp.jar","version": "${version}","semanticVersion": "${semanticVersion}","repositoryName": "sample-devops-webapp"}],"stageName": "build"}""")
                     sleep 5
                 }
        }
@@ -22,6 +21,7 @@ pipeline {
                echo "Testing"
                sh 'mvn test'
                sleep 3
+              snDevOpsArtifact(artifactsPayload:"""{"artifacts": [{"name": "sample-devops-webapp.jar","version": "${version}","semanticVersion": "${semanticVersion}","repositoryName": "sample-devops-webapp"}],"stageName": "build"}""")
            }
           post {
                 always {
