@@ -33,13 +33,18 @@ pipeline {
       stage("deploy") {
              steps{
                   snDevOpsStep ()
-                snDevOpsPackage(name: "sample-devops-webapp_${version}", artifactsPayload: """{"artifacts": [{"name": "sample-devops-webapp.jar","version": "${version}","semanticVersion": "${semanticVersion}","repositoryName": "sample-devops-webapp"}]}""")
-
                   echo "deploy in prod"
                   echo "deploy in prod"
                   snDevOpsChange()              
               }
-      }      
+      }   
+      stage("final") {
+             steps{
+                  snDevOpsStep ()
+                snDevOpsPackage(name: "sample-devops-webapp_${version}", artifactsPayload: """{"artifacts": [{"name": "sample-devops-webapp.jar","version": "${version}","semanticVersion": "${semanticVersion}","repositoryName": "sample-devops-webapp"}]}""")
+                echo "deploy final"
+              }
+      }   
       
   }
 }
