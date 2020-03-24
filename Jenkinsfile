@@ -47,7 +47,7 @@ pipeline {
                echo " post_deploy Testing"
                sh 'mvn test'
                sleep 3
-              snDevOpsArtifact(artifactsPayload:"""{"artifacts": [{"name": "sample-devops-webapp.jar","version": "${version}","semanticVersion": "${semanticVersion}","repositoryName": "sample-devops-webapp"}],"stageName": "test"}""")
+              snDevOpsArtifact(artifactsPayload:"""{"artifacts": [{"name": "sample-devops-webapp.jar","version": "${version}","semanticVersion": "${semanticVersion}","repositoryName": "sample-devops-webapp"}],"stageName": "post_deploy_test"}""")
            }
           post {
                 always {
