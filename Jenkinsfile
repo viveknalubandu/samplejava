@@ -46,7 +46,7 @@ pipeline {
                snDevOpsStep ()
                echo " post_deploy Testing"
                sh 'mvn test'
-        snDevOpsArtifact(artifactsPayload:"""{"artifacts": [{"name": "sample-devops-webapp-art.jar","version": "${version}","semanticVersion": "${semanticVersion}","repositoryName": "sample-devops-webapp-art"}],"stageName": "post_deploy_test"}""")
+        snDevOpsArtifact(artifactsPayload:"""{"artifacts": [{"name": "sample-devops-webapp.jar","version": "1${version}","semanticVersion": "1${semanticVersion}","repositoryName": "sample-devops-webapp"}],"stageName": "post_deploy_test"}""")
                sleep 3
            }
           post {
@@ -59,7 +59,7 @@ pipeline {
       stage("final") {
              steps{
                 snDevOpsStep ()
-                snDevOpsPackage(name: "sample-devops-webapp-art_${version}", artifactsPayload: """{"artifacts": [{"name": "sample-devops-webapp-art.jar","version": "${version}","semanticVersion": "${semanticVersion}","repositoryName": "sample-devops-webapp-art"}]}""")
+                snDevOpsPackage(name: "sample-devops-webapp_${version}", artifactsPayload: """{"artifacts": [{"name": "sample-devops-webapp.jar","version": "${version}","semanticVersion": "${semanticVersion}","repositoryName": "sample-devops-webapp"}]}""")
                 echo "deploy final"
                 echo "final deploy in prod"
                 snDevOpsChange() 
