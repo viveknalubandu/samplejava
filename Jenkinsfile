@@ -7,6 +7,7 @@ pipeline {
       maven 'Maven'
    }
    stages {
+      
        stage("build") {
                 steps {
                     snDevOpsStep ()
@@ -15,6 +16,7 @@ pipeline {
                     sleep 5
                 }
        }
+      
       stage("test") {
            steps {
                snDevOpsStep ()
@@ -37,12 +39,30 @@ pipeline {
                   echo "deploy in prod"
                   snDevOpsChange()              
               }
-      }   
+      }  
+      
+      stage("post_deploy_test") {
+           steps {
+               snDevOpsStep ()
+               echo " post_deploy Testing"
+               sh 'mvn test'
+               sleep 3
+              snDevOpsArtifact(artifactsPayload:"""{"artifacts": [{"name": "sample-devops-webapp.jar","version": "${version}","semanticVersion": "${semanticVersion}","repositoryName": "sample-devops-webapp"}],"stageName": "test"}""")
+           }
+          post {
+                always {
+                    junit '**/target/surefire-reports/*.xml' 
+                }
+          }
+      }
+      
       stage("final") {
              steps{
-                  snDevOpsStep ()
+                snDevOpsStep ()
                 snDevOpsPackage(name: "sample-devops-webapp_${version}", artifactsPayload: """{"artifacts": [{"name": "sample-devops-webapp.jar","version": "${version}","semanticVersion": "${semanticVersion}","repositoryName": "sample-devops-webapp"}]}""")
                 echo "deploy final"
+                echo "final deploy in prod"
+                snDevOpsChange() 
               }
       }   
       
