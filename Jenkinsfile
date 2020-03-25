@@ -1,6 +1,6 @@
-def semanticVersion = "HOTFIX${env.BUILD_NUMBER}.0.0"
+def semanticVersion = "${env.BUILD_NUMBER}.rc1.0"
 def packageName = "sample_devops-package_${env.BUILD_NUMBER}"
-def version = "HOTFIX${env.BUILD_NUMBER}.0"
+def version = "${env.BUILD_NUMBER}.rc1"
 pipeline {
    agent any
    tools {
