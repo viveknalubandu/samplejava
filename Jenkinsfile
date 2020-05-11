@@ -39,29 +39,5 @@ pipeline {
                   snDevOpsChange()              
               }
       }  
-      
-      stage("post_deploy_test") {
-           steps {
-               snDevOpsStep ()
-               echo " post_deploy Testing"
-               sh 'mvn test'
-               sleep 3
-           }
-          post {
-                always {
-                    junit '**/target/surefire-reports/*.xml' 
-                }
-          }
-      }
-      
-      stage("final") {
-             steps{
-                snDevOpsStep ()
-                echo "deploy final"
-                echo "final deploy in prod"
-                snDevOpsChange() 
-              }
-      }   
-      
   }
 }
