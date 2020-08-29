@@ -16,7 +16,7 @@ pipeline {
                 }
        }
       
-      stage("test") {
+      stage("test1") {
            steps {
                snDevOpsStep()
                echo "Testing"
