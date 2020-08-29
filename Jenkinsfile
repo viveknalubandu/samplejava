@@ -18,6 +18,7 @@ pipeline {
       
       stage("test") {
            steps {
+               snDevOpsStep()
                echo "Testing"
                sh 'mvn test'
                sleep 3
