@@ -10,6 +10,7 @@ pipeline {
       
        stage("build") {
                 steps {
+                    snDevOpsStep()
                     echo "Building" 
                     sh 'mvn -X clean install -DskipTests'
                     sleep 5
@@ -32,6 +33,7 @@ pipeline {
     
       stage("deploy") {
              steps{
+                  snDevOpsStep()
                   echo "deploy in prod"
                   echo "deploy in prod"
                   snDevOpsChange()              
