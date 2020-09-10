@@ -13,6 +13,7 @@ pipeline {
                     echo "Building" 
                     sh 'mvn -X clean install -DskipTests'
                     sleep 5
+                    snDevOpsStep()
                 }
        }
       
@@ -21,6 +22,7 @@ pipeline {
                echo "Testing"
                sh 'mvn test'
                sleep 3
+               snDevOpsStep()
            }
           post {
                 always {
@@ -31,6 +33,7 @@ pipeline {
     
       stage("deploy") {
              steps{
+                  snDevOpsStep()
                   echo "deploy in prod"
                   echo "deploy in prod"
                   snDevOpsChange()              
