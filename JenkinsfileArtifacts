@@ -13,7 +13,7 @@ pipeline {
                     echo "Building" 
                     sh 'mvn -X clean install -DskipTests'
                     sleep 5
-                    
+                    snDevOpsArtifact(artifactsPayload:"""{"artifacts": [{"name": "sa-web-ui.jar2","version":"1.11","semanticVersion": "1.11.2","repositoryName": "services-1131"}]}""")
                 }
        }
       
@@ -33,7 +33,7 @@ pipeline {
     
       stage("deploy") {
              steps{
-                 
+                  snDevOpsPackage(name: "sentimentpackage", artifactsPayload: """{"artifacts": [{"name": "sa-web-ui.jar2","repositoryName": "services-1131","version":"1.11"}]}""")
                   echo "deploy in prod"
                   echo "deploy in prod"
                   snDevOpsChange()              
