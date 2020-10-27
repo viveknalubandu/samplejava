@@ -8,18 +8,9 @@ pipeline {
    }
    stages {
       
-       stage("build") {
-                steps {
-                    echo "Building" 
-                    sh 'mvn -X clean install -DskipTests'
-                    sleep 5
-                    snDevOpsStep()
-                }
-       }
-      
-      stage("test") {
-           steps {
-               echo "Testing"
+       stage("junit") {
+            steps {
+               echo "Junit"
                sh 'mvn test'
                sleep 3
                snDevOpsStep()
@@ -29,12 +20,21 @@ pipeline {
                     junit '**/target/surefire-reports/*.xml' 
                 }
           }
+       }
+      
+      stage("testng") {
+           steps {
+               echo "Testing"
+               sh 'mvn test'
+               sleep 3
+               checkout scm
+               sh 'mvn clean test'
+               step([$class: 'Publisher', reportFilenamePattern: '**/testng-results.xml'])
+           }
         }
     
       stage("deploy") {
              steps{
-                  snDevOpsStep()
-                  echo "deploy in prod"
                   echo "deploy in prod"
                   snDevOpsChange()              
               }
