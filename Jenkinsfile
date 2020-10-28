@@ -1,32 +1,35 @@
-def semanticVersion = "${env.BUILD_NUMBER}.0.0-HOTFIX1"
-def packageName = "sample_devops-package_${env.BUILD_NUMBER}"
-def version = "${env.BUILD_NUMBER}.0"
 pipeline {
+ agent none
+ tools {
+    	maven 'Maven'
+ }
+ stages {
+  stage("Junit"){
    agent any
-   tools {
-      maven 'Maven'
+   steps{
+     checkout scm
+     sh 'mvn clean test'
    }
-   stages {
-      
-       stage("junit") {
-            steps {
-               echo "Junit"
-           }
+   post {
+       always {
+          junit '**/target/surefire-reports/*.xml' 
        }
-      
-      stage("testng") {
-           steps {
-              checkout scm
-               sh 'mvn clean test'
-               step([$class: 'Publisher', reportFilenamePattern: '**/testng-results.xml'])
-           }
-        }
-    
-      stage("deploy") {
-             steps{
-                  echo "deploy in prod"
-                  snDevOpsChange()              
-              }
-      }  
+   } 
   }
+  
+  stage("Tests") {
+   agent any
+   steps {
+    checkout scm
+    sh 'mvn clean test'
+    step([$class: 'Publisher', reportFilenamePattern: '**/testng-results.xml'])
+   }
+  }
+  stage('Deploy'){
+   agent any
+   steps{
+     snDevOpsChange()
+   }
+  }
+ }
 }
