@@ -8,13 +8,13 @@ pipeline {
    agent any
    steps{
      checkout scm
-     sh 'mvn clean test'
+     //sh 'mvn clean test'
    }
-   post {
+  /* post {
        always {
           junit '**/target/surefire-reports/*.xml' 
        }
-   } 
+   } */
   }
   
   stage("Tests") {
