@@ -11,15 +11,7 @@ pipeline {
        stage("junit") {
             steps {
                echo "Junit"
-               sh 'mvn test'
-               sleep 3
-               snDevOpsStep()
            }
-          post {
-                always {
-                    junit '**/target/surefire-reports/*.xml' 
-                }
-          }
        }
       
       stage("testng") {
