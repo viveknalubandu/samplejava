@@ -17,7 +17,7 @@ pipeline {
    steps {
     checkout scm
     sh 'mvn clean test'
-    step([$class: 'Publisher', reportFilenamePattern: '**/testng-results.xml'])
+    step([$class: 'Publisher', reportFilenamePattern: '**/testng.xml'])
    }
   }
   stage('Deploy'){
