@@ -16,11 +16,9 @@ pipeline {
       
       stage("testng") {
            steps {
-               echo "Testing"
-               sh 'mvn test'
-               sleep 3
+              checkout scm
+               sh 'mvn clean test'
                step([$class: 'Publisher', reportFilenamePattern: '**/testng-results.xml'])
-              sleep 4
            }
         }
     
